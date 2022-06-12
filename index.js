@@ -124,8 +124,20 @@ module.exports = function() {
         promises.push(dependencies);
     }
 
+    function wrapElmCode (code) {
+      return `
+        function wrapper() {
+          let output = {};
+          (function () { ${code} }).call(output);
+          return output.Elm;
+        }
+
+        export default wrapper;
+      `;
+    }
+
     var compilation = compile(files, options)
-        .then(function(v) { return { kind: "success", result: v }; })
+        .then(function(v) { return { kind: "success", result: wrapElmCode(v) }; })
         .catch(function(v) { return { kind: "error", error: v }; });
 
     promises.push(compilation);
