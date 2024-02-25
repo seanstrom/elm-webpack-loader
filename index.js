@@ -126,13 +126,13 @@ module.exports = function() {
 
     function wrapElmCode (code) {
       return `
-        function wrapper() {
-          let output = {};
+        function wrapper(world = {}) {
+          let output = world;
           (function () { ${code} }).call(output);
           return output.Elm;
         }
 
-        export default wrapper;
+        export const Elm = wrapper;
       `;
     }
 
